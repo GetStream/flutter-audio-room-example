@@ -1,4 +1,5 @@
 import 'package:audio_example/env.dart';
+import 'package:stream_video_flutter/stream_video_flutter.dart';
 
 class UserModel {
   UserModel({
@@ -36,5 +37,10 @@ final kUsers = [
 ];
 
 extension ToUserInfo on UserModel {
-  // TODO: Video Implementation
+  UserInfo toUserInfo() => UserInfo(
+    id: uid,
+    role: 'user',
+    name: name,
+    image: imageURL,
+  );
 }

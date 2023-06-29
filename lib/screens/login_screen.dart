@@ -1,6 +1,7 @@
-import 'package:audio_example/screens/home_screen.dart';
 import 'package:audio_example/models/user_model.dart';
+import 'package:audio_example/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_video_flutter/stream_video_flutter.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -28,7 +29,10 @@ class LoginScreen extends StatelessWidget {
                   backgroundImage: NetworkImage(user.imageURL),
                 ),
                 onTap: () async {
-                  // TODO: Connect User
+                  await StreamVideo.instance.connectUser(
+                    user.toUserInfo(),
+                    user.token,
+                  );
                   Navigator.of(context).pushReplacement(
                     HomeScreen.routeTo(user),
                   );
