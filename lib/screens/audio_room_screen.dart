@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:audio_example/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_video_flutter/stream_video_flutter.dart';
@@ -33,31 +35,32 @@ class AudioRoomScreen extends StatefulWidget {
 class _AudioRoomScreenState extends State<AudioRoomScreen> {
   UserModel get currentUser => widget.user;
 
-  CallMetadata get roomMetadata => widget.room;
-
   Call get call => widget.activeCall;
 
   StreamVideo get video => StreamVideo.instance;
 
   late CallState callState;
   late ValueNotifier<bool> enabled;
+  CallMetadata? roomMetadata;
 
   List<CallParticipantState> listeners = [];
 
   @override
   void initState() {
     super.initState();
+
+    roomMetadata = widget.room;
     callState = call.state.value;
     enabled = ValueNotifier(false);
     listeners = _sortParticipants(callState.callParticipants);
   }
 
   List<CallParticipantState> _sortParticipants(
-      List<CallParticipantState> participants,
-      ) {
+    List<CallParticipantState> participants,
+  ) {
     if (participants.length > 1) {
       participants.sort(
-            (a, b) {
+        (a, b) {
           if (b.isAudioEnabled) {
             return 1;
           } else {
@@ -80,6 +83,58 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
     }
   }
 
+  Widget _buildBackstageBanner() {
+    return StreamBuilder<CallState>(
+      initialData: callState,
+      stream: call.state.asStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && !snapshot.hasError) {
+          callState = snapshot.data!;
+
+          if (!callState.isBackstage) {
+            return const SliverToBoxAdapter(
+              child: SizedBox.shrink(),
+            );
+          }
+
+          return SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.amber,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'ROOM IN BACKSTAGE MODE',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          call.goLive();
+                        },
+                        child: const Text(
+                          'GO LIVE',
+                          style: TextStyle(color: Colors.red),
+                        ))
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
+        return const SliverToBoxAdapter(
+          child: SizedBox.shrink(),
+        );
+      },
+    );
+  }
+
   Widget _buildParticipants() {
     return StreamBuilder<CallState>(
       initialData: callState,
@@ -97,7 +152,7 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
           listeners = _sortParticipants(callState.callParticipants);
           return SliverGrid(
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 return Align(
                   widthFactor: 0.8,
                   child: StreamCallParticipant(
@@ -135,7 +190,10 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Scaffold(
-        appBar: _AppBar(currentUser: currentUser, roomMetadata: roomMetadata),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text('Room ${roomMetadata?.details.custom['name']}'),
+        ),
         floatingActionButton: _ActionMenu(
           call: call,
           isMicEnabled: enabled,
@@ -143,15 +201,13 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
         ),
         body: CustomScrollView(
           slivers: [
+            _buildBackstageBanner(),
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
                   'Participants 🎙️',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
                 ),
               ),
             ),
@@ -199,7 +255,7 @@ class _ActionMenu extends StatelessWidget {
         const SizedBox(width: 12.0),
         ElevatedButton(
           onPressed: () async {
-            await call.disconnect();
+            await call.leave();
             Navigator.of(context).pop();
           },
           child: const Icon(Icons.exit_to_app),
@@ -207,28 +263,4 @@ class _ActionMenu extends StatelessWidget {
       ],
     );
   }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({
-    super.key,
-    required this.currentUser,
-    required this.roomMetadata,
-  });
-
-  final UserModel currentUser;
-  final CallMetadata roomMetadata;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(currentUser.imageURL),
-      ),
-      title: Text('In Room ${roomMetadata.details.custom['name']}'),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80.0);
 }
