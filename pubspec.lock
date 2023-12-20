@@ -232,14 +232,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  internet_connection_checker:
-    dependency: transitive
-    description:
-      name: internet_connection_checker
-      sha256: "1c683e63e89c9ac66a40748b1b20889fd9804980da732bf2b58d6d5456c8e876"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   intl:
     dependency: transitive
     description:
@@ -518,19 +510,21 @@ packages:
     source: hosted
     version: "2.1.2"
   stream_video:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../stream-video-flutter/packages/stream_video"
-      relative: true
-    source: path
-    version: "0.3.0"
+      name: stream_video
+      sha256: "03042569bbc2642c6642448fc75d55a892e6c1765dfa85b7e1f523318c9fa655"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   stream_video_flutter:
     dependency: "direct main"
     description:
-      path: "../stream-video-flutter/packages/stream_video_flutter"
-      relative: true
-    source: path
-    version: "0.3.0"
+      name: stream_video_flutter
+      sha256: "53fec872891517c4257c61a7d3bc984583dd7c9f798be6cea42278a1b2f8e79e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   string_scanner:
     dependency: transitive
     description:
