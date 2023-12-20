@@ -1,8 +1,0 @@
-class Env {
-  static const apiKey = 'hd8szvscpxvd';
-
-  // Tokens
-  static const nashToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoibmFzaCIsImlzcyI6InByb250byIsInN1YiI6InVzZXIvbmFzaCIsImlhdCI6MTY4Nzc5NzY3MSwiZXhwIjoxNjg4NDAyNDc2fQ.Gb5PcFi7F6un--pJG7owUgo1kTpqNsl2ywuTYhuJw7w';
-  static const devenToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGV2ZW4iLCJpc3MiOiJwcm9udG8iLCJzdWIiOiJ1c2VyL2RldmVuIiwiaWF0IjoxNjg3Nzk3NjkyLCJleHAiOjE2ODg0MDI0OTd9.JXxRff6SwSvzTNBTSU4sW8tDa6CsQDC601lfjKpjTDw';
-  static const thierryToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidGhpZXJyeSIsImlzcyI6InByb250byIsInN1YiI6InVzZXIvdGhpZXJyeSIsImlhdCI6MTY4Nzc5NzY2MCwiZXhwIjoxNjg4NDAyNDY1fQ.YV9INbwDdKZwYO805q6tZ8froqKJnX_CMzsdqk5ai7A';
-}

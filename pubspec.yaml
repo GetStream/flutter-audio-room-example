@@ -10,9 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   uuid: ^3.0.7
-  stream_video_flutter:
-    path:
-      ../stream-video-flutter/packages/stream_video_flutter
+  stream_video_flutter: ^0.3.1
 
 dev_dependencies:
   flutter_test:
