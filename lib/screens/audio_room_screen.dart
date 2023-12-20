@@ -53,6 +53,13 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
     callState = call.state.value;
     enabled = ValueNotifier(false);
     listeners = _sortParticipants(callState.callParticipants);
+
+    call.onPermissionRequest = (permissionRequest) {
+      call.grantPermissions(
+        userId: permissionRequest.user.id,
+        permissions: permissionRequest.permissions.toList(),
+      );
+    };
   }
 
   List<CallParticipantState> _sortParticipants(
@@ -78,6 +85,9 @@ class _AudioRoomScreenState extends State<AudioRoomScreen> {
       call.setMicrophoneEnabled(enabled: false);
       enabled.value = false;
     } else {
+      if (!call.hasPermission(CallPermission.sendAudio)) {
+        call.requestPermissions([CallPermission.sendAudio]);
+      }
       call.setMicrophoneEnabled(enabled: true);
       enabled.value = true;
     }
